@@ -4,11 +4,11 @@
 #include <array>
 #include <type_traits>
 
-#include "../Containers/containers.h"
+#include "containers.h"
 
 /*
-Defines Point2D class without any base class.
-Declares an std::array<T, 2> as a (protectred) member.
+Defines Point2D<T> class without any base class.
+Declares an std::array<T, 2> as a (protected) member.
 Defines custom ctor taking std::array<T, 2> as an argument.
 
 Good:
@@ -16,7 +16,7 @@ Instantiation is easy using std::array<T, 2>.
 Overloaded operators works even outside of the namespace.
 
 Bad:
-Needs to define a lot of operators for only this class.
+Needs to overload operators for each class.
 */
 namespace Imaging
 {
@@ -24,7 +24,7 @@ namespace Imaging
 	class Point2D
 	{
 		static_assert(std::is_arithmetic<T>::value,
-		"Only arithmetic data types are supported.");
+		"Only arithmetic data types are supported for this class template.");
 	public:
 		////////////////////////////////////////////////////////////////////////////////////
 		// Default constructors.
@@ -48,6 +48,32 @@ namespace Imaging
 	protected:
 		void Swap(Point2D<T> &src);
 		std::array<T, 2> data_;
+	};
+
+	template <typename T>
+	class Size2D
+	{
+		static_assert(std::is_arithmetic<T>::value,
+		"Only arithmetic data types are supported for this class template.");
+	public:
+		////////////////////////////////////////////////////////////////////////////////////
+		// Default constructors.
+		Size2D(void);
+		Size2D(const Size2D<T> &src);
+		Size2D(Size2D<T> &&src);
+		Size2D &operator=(Size2D<T> src);
+
+		////////////////////////////////////////////////////////////////////////////////////
+		// Custom constructors.
+		Size2D(const std::array<T, 2> &srcData);
+		Size2D(std::array<T, 2> &&srcData);
+		//Size2D &operator=(std::array<T, 2> srcData);
+
+		////////////////////////////////////////////////////////////////////////////////////
+		// Overloaded operators.
+		Size2D<T> operator+(const Size2D<T> &pt);
+
+		T &width, &height;
 	};
 }
 

@@ -1,5 +1,14 @@
 #include "coordinate1.h"
 
+void TestContainers(void)
+{
+	std::array<int, 2> array1 = { 1, 2 }, array2 = { 3, 4 };
+
+	// The operator+ works only INSIDE of the namespace.
+	using namespace Imaging;
+	std::array<int, 2> array3 = array1 + array2;
+}
+
 template <typename T>
 void TestPoint2D(void)
 {
@@ -34,6 +43,8 @@ void TestPoint2D(void)
 
 int main(void)
 {
+	TestContainers();
+
 	TestPoint2D<int>();
 
 	// Following line generates C2338 with customized error message. GREAT!

@@ -3,9 +3,14 @@
 
 #include <array>
 #include <stdexcept>
-//#include <typeinfo>
 #include <safeint.h>
 
+/*
+Overloads the operators for std::array<T, N> as non-member functions.
+
+Bad:
+These operators works only INSIDE of the namespace.
+*/
 namespace Imaging
 {
 	template <typename T, ::size_t N>
@@ -13,7 +18,6 @@ namespace Imaging
 
 	template <typename T, ::size_t N>
 	std::array<T, N> operator+(const std::array<T, N> &a, const std::array<T, N> &b);
-
 }
 
 #include "containers_inl.h"

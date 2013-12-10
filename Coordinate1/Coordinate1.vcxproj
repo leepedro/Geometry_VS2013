@@ -76,6 +76,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="containers.h" />
+    <ClInclude Include="containers_inl.h" />
     <ClInclude Include="coordinate1.h" />
     <ClInclude Include="coordinate1_inl.h" />
   </ItemGroup>
