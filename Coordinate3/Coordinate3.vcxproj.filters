@@ -21,6 +21,9 @@
     <ClInclude Include="coordinate3_inl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="algorithms.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="test_coordinate3.cpp">

@@ -1,8 +1,21 @@
 #include "coordinate3.h"
 
+void TestCoordinateSimple(void)
+{
+	// Valid aggregate initialization.
+	Imaging::Coordinate<int, 2> coord1 = { 1, 2 };
+
+	// Compiles with Intellisense warning. It IS valid.
+	Imaging::Coordinate<int, 2> coord2{ 3, 4 };
+
+	// Compiles with Intellisense warning. It IS valid.
+	Imaging::Coordinate<int, 2> coord3{ { 3, 4 } };
+}
+
 template <typename T>
 void TestCoordinate(void)
 {
+	// Brace/Aggregate initialization.
 	Imaging::Coordinate<T, 2> coord1 = { 1, 2 };
 	Imaging::Coordinate<T, 2> coord2{ 3, 4 };
 
@@ -16,8 +29,8 @@ void TestCoordinate(void)
 template <typename T>
 void TestPoint2D(void)
 {
-
-	Imaging::Point2D<T> pt1;	// Default ctor
+	// Default ctor
+	Imaging::Point2D<T> pt1;
 	pt1.x = 1, pt1.y = 2;
 
 	// This works by implicitly taking ctor Point2D(const Coordinate<T, 2> &)
@@ -48,9 +61,14 @@ int main(void)
 {
 	TestCoordinate<int>();
 
+	// NOT working for non-integral type.
+	// AR: FIGURE OUT SOMETHING!
+	//TestCoordinate<double>();
+
 	TestPoint2D<int>();
+	//TestPoint2D<double>();
 
 	// Following line generates C2338 with customized error message. GREAT!
-	// This is much better than std::enable_if<T> from <type_traits>.
+	// This is better than std::enable_if<T> from <type_traits>.
 	//TestPoint2D<std::string>();
 }

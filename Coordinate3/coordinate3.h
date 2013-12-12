@@ -2,8 +2,8 @@
 #define COORDINATE3_H
 
 #include <array>
-#include <stdexcept>
-#include <safeint.h>
+
+#include "algorithms.h"
 
 /*
 Defines Coordinate<T, N> class without any user defined ctor.
@@ -20,6 +20,7 @@ Overloaded operators for Coordinate<T, N> still works works for derived classes.
 Overloaded member operators works outside of the namespace.
 
 So far, this seems the best approach.
+NOTE: std::array<T, N> cannot be used with std::initialization_list<T>.
 */
 namespace Imaging
 {
@@ -27,7 +28,7 @@ namespace Imaging
 	class Coordinate
 	{
 		static_assert(std::is_arithmetic<T>::value,
-			"Only arithmetic data types are supported.");
+			"Only arithmetic data types are supported for this class template.");
 	public:
 		////////////////////////////////////////////////////////////////////////////////////
 		// Overloaded operators.

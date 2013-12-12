@@ -3,27 +3,28 @@
 
 namespace Imaging
 {
+	////////////////////////////////////////////////////////////////////////////////////
+	// Coordinate<T, N>
+
 	template <typename T, ::size_t N>
 	Coordinate<T, N> Coordinate<T, N>::operator+(const Coordinate<T, N> &other) const
 	{
 		Coordinate<T, N> result;
-		auto it_c = result.data.begin(), it_c_end = result.data.end();
-		for (auto it_a = this->data.cbegin(), it_b = other.data.cbegin();
-			it_c != it_c_end; ++it_a, ++it_b, ++it_c)
-		{
-			if (!msl::utilities::SafeAdd(*it_a, *it_b, *it_c))
-				throw std::overflow_error(
-				"The result of add operation exceeds the limit of the data type.");
-		}
+		Add(this->data.cbegin(), this->data.cend(), other.data.cbegin(), result.data.begin());
 		return result;
 	}
 
+
+	////////////////////////////////////////////////////////////////////////////////////
+	// Point2D<T>
+
 	template <typename T>
-	Point2D<T>::Point2D(void) : x(data.at(0)), y(data.at(1)), Coordinate<T, 2>() {}
+	Point2D<T>::Point2D(void) :
+		Coordinate<T, 2>(), x(this->data.at(0)), y(this->data.at(1)) {}
 
 	template <typename T>
 	Point2D<T>::Point2D(const Point2D<T> &src) :
-		x(data.at(0)), y(data.at(1)), Coordinate<T, 2>(src) {}
+		Coordinate<T, 2>(src), x(this->data.at(0)), y(this->data.at(1)) {}
 
 	template <typename T>
 	Point2D<T>::Point2D(Point2D<T> &&src) : Point2D<T>()
@@ -42,7 +43,7 @@ namespace Imaging
 
 	template <typename T>
 	Point2D<T>::Point2D(const Coordinate<T, 2> &src) :
-		x(data.at(0)), y(data.at(1)), Coordinate<T, 2>(src) {}
+		Coordinate<T, 2>(src), x(this->data.at(0)), y(this->data.at(1)) {}
 
 	template <typename T>
 	Point2D<T>::Point2D(Coordinate<T, 2> &&src) : Point2D<T>()
