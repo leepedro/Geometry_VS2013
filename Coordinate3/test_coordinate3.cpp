@@ -60,13 +60,10 @@ void TestPoint2D(void)
 int main(void)
 {
 	TestCoordinate<int>();
-
-	// NOT working for non-integral type.
-	// AR: FIGURE OUT SOMETHING!
-	//TestCoordinate<double>();
+	TestCoordinate<double>();
 
 	TestPoint2D<int>();
-	//TestPoint2D<double>();
+	TestPoint2D<double>();
 
 	// Following line generates C2338 with customized error message. GREAT!
 	// This is better than std::enable_if<T> from <type_traits>.
