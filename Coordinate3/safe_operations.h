@@ -3,6 +3,8 @@
 
 #include <stdexcept>
 #include <sstream>
+#include <iostream>
+
 #include <safeint.h>
 
 namespace Imaging

@@ -6,26 +6,27 @@
 #include "algorithms.h"
 
 /*
-Defines Coordinate<T, N> class without any user defined ctor.
+Defines Array<T, N> class without any user defined ctor.
 Declares an std::array<T, 2> as a public member and it must be the only member.
-Overloads member operators for Coordinate<T, N>.
+Overloads member operators for Array<T, N>.
 Derives Point2D<T> class from Coordinate<T, 2>.
 Defines custom ctor for Point2D<T> taking Coordinate<T, 2> as an argument even though it
 SHOULD NOT.
 
 Good:
-Can do aggregate instantiation of Coordinate<T, N> like std::array<T, N>.
+Can do aggregate instantiation of Array<T, N> like std::array<T, N>.
 Instantiation is easy aggregate initialization; as good as coordinate1.
-Overloaded operators for Coordinate<T, N> still works works for derived classes.
+Overloaded operators for Array<T, N> still works works for derived classes.
 Overloaded member operators works outside of the namespace.
 
 So far, this seems the best approach.
-NOTE: std::array<T, N> cannot be used with std::initialization_list<T>.
+NOTE: Since std::array<T, N> cannot be used with std::initialization_list<T> or a move ctor,
+there is not much benefit to implement them for its derived classes.
 */
 namespace Imaging
 {
 	template <typename T, ::size_t N>
-	class Coordinate
+	class Array
 	{
 		static_assert(std::is_arithmetic<T>::value,
 			"Only arithmetic data types are supported for this class template.");
@@ -33,34 +34,40 @@ namespace Imaging
 		////////////////////////////////////////////////////////////////////////////////////
 		// Overloaded operators.
 		template <typename U>
-		Coordinate<T, N> operator+(const Coordinate<U, N> &rhs) const;
-		template <typename U>
-		Coordinate<T, N> operator+(U rhs) const;
-		template <typename U>
-		void operator+=(const Coordinate<U, N> &rhs);
-		template <typename U>
-		void operator+=(U rhs);
+		Array<T, N> operator+(const Array<U, N> &rhs) const;
 
+		template <typename U>
+		std::enable_if_t<std::is_arithmetic<U>::value, Array<T, N>>
+			operator+(U rhs) const;
+
+		template <typename U>
+		void operator+=(const Array<U, N> &rhs);
+
+		template <typename U>
+		std::enable_if_t<std::is_arithmetic<U>::value, void> operator+=(U rhs);
+
+		////////////////////////////////////////////////////////////////////////////////////
+		// Members.
 		std::array<T, N> data;
 	};
 
 	template <typename T>
-	class Point2D : public Coordinate<T, 2>
+	class Point2D : public Array<T, 2>
 	{
 		static_assert(std::is_arithmetic<T>::value,
-		"Only arithmetic data types are supported for this class template.");
+			"Only arithmetic data types are supported for this class template.");
 	public:
 		////////////////////////////////////////////////////////////////////////////////////
 		// Default constructors.
 		Point2D(void);
 		Point2D(const Point2D<T> &src);
-		Point2D(Point2D<T> &&src);
+		Point2D(Point2D<T> &&src);	// ?
 		Point2D &operator=(Point2D<T> src);
 
 		////////////////////////////////////////////////////////////////////////////////////
 		// Custom constructors.
-		Point2D(const Coordinate<T, 2> &src);
-		Point2D(Coordinate<T, 2> &&src);
+		Point2D(const Array<T, 2> &src);
+		Point2D(Array<T, 2> &&src);	// ?
 
 		T &x, &y;
 
@@ -69,7 +76,7 @@ namespace Imaging
 	};
 
 	template <typename T>
-	class Size2D : public Coordinate<T, 2>
+	class Size2D : public Array<T, 2>
 	{
 		static_assert(std::is_arithmetic<T>::value,
 			"Only arithmetic data types are supported for this class template.");
@@ -83,8 +90,8 @@ namespace Imaging
 
 		////////////////////////////////////////////////////////////////////////////////////
 		// Custom constructors.
-		Size2D(const Coordinate<T, 2> &src);
-		Size2D(Coordinate<T, 2> &&src);
+		Size2D(const Array<T, 2> &src);
+		Size2D(Array<T, 2> &&src);
 
 		T &width, &height;
 	};
