@@ -5,19 +5,21 @@
 
 namespace Imaging
 {
-
-	template <typename T_ConstIterator, typename T_Iterator>
-	void Add(T_ConstIterator it_a, T_ConstIterator it_a_last, T_ConstIterator it_b,
-		T_Iterator it_c)
+	// A = B + C
+	template <typename InputIterator, typename OutputIterator>
+	void AddRange(InputIterator it_a, InputIterator it_a_last, InputIterator it_b,
+		OutputIterator it_c)
 	{
 		for (; it_a != it_a_last; ++it_a, ++it_b, ++it_c)
-		{
 			Add(*it_a, *it_b, *it_c);
-			//if (!msl::utilities::SafeAdd(*it_a, *it_b, *it_c))
-			//	throw std::overflow_error(
-			//	"The result of add operation exceeds the limit of the data type.");
-		}
+	}
 
+	// A += B
+	template <typename InputIterator, typename OutputIterator>
+	void AddRange(OutputIterator it_a, OutputIterator it_a_last, InputIterator it_b)
+	{
+		for (; it_a != it_a_last; ++it_a, ++it_b)
+			Add(*it_a, *it_b, *it_a);
 	}
 }
 

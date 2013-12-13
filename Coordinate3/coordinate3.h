@@ -32,7 +32,14 @@ namespace Imaging
 	public:
 		////////////////////////////////////////////////////////////////////////////////////
 		// Overloaded operators.
-		Coordinate<T, N> operator+(const Coordinate<T, N> &other) const;
+		template <typename U>
+		Coordinate<T, N> operator+(const Coordinate<U, N> &rhs) const;
+		template <typename U>
+		Coordinate<T, N> operator+(U rhs) const;
+		template <typename U>
+		void operator+=(const Coordinate<U, N> &rhs);
+		template <typename U>
+		void operator+=(U rhs);
 
 		std::array<T, N> data;
 	};

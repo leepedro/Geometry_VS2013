@@ -24,6 +24,9 @@ void TestCoordinate(void)
 	
 	// The operator+ works even OUTSIDE of the namespace. Great!
 	Imaging::Coordinate<T, 2> coord3 = coord1 + coord2;
+	coord3 = coord1 + static_cast<short>(2);
+	coord3 += coord1;
+	coord3 += static_cast<T>(2);
 }
 
 template <typename T>
@@ -60,10 +63,10 @@ void TestPoint2D(void)
 int main(void)
 {
 	TestCoordinate<int>();
-	TestCoordinate<double>();
+	//TestCoordinate<double>();
 
 	TestPoint2D<int>();
-	TestPoint2D<double>();
+	//TestPoint2D<double>();
 
 	// Following line generates C2338 with customized error message. GREAT!
 	// This is better than std::enable_if<T> from <type_traits>.
