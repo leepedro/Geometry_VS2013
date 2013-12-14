@@ -37,8 +37,7 @@ namespace Imaging
 		Array<T, N> operator+(const Array<U, N> &rhs) const;
 
 		template <typename U>
-		std::enable_if_t<std::is_arithmetic<U>::value, Array<T, N>>
-			operator+(U rhs) const;
+		std::enable_if_t<std::is_arithmetic<U>::value, Array<T, N>> operator+(U rhs) const;
 
 		template <typename U>
 		void operator+=(const Array<U, N> &rhs);
@@ -61,18 +60,14 @@ namespace Imaging
 		// Default constructors.
 		Point2D(void);
 		Point2D(const Point2D<T> &src);
-		Point2D(Point2D<T> &&src);	// ?
-		Point2D &operator=(Point2D<T> src);
+		Point2D &operator=(const Point2D<T> &src);
 
 		////////////////////////////////////////////////////////////////////////////////////
 		// Custom constructors.
-		Point2D(const Array<T, 2> &src);
-		Point2D(Array<T, 2> &&src);	// ?
+		Point2D(const Array<T, 2> &srcData);
+		//Point2D &operator=(const Array<T, 2> &srcData);	// optional, no need
 
 		T &x, &y;
-
-	protected:
-		void Swap(Point2D<T> &src);
 	};
 
 	template <typename T>
@@ -85,13 +80,12 @@ namespace Imaging
 		// Default constructors.
 		Size2D(void);
 		Size2D(const Size2D<T> &src);
-		Size2D(Size2D<T> &&src);
 		Size2D &operator=(Size2D<T> src);
 
 		////////////////////////////////////////////////////////////////////////////////////
 		// Custom constructors.
 		Size2D(const Array<T, 2> &src);
-		Size2D(Array<T, 2> &&src);
+		//Size2D &operator=(const Array<T, 2> &srcData);	// optional, no need
 
 		T &width, &height;
 	};

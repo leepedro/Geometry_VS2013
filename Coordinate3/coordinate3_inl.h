@@ -9,19 +9,23 @@ namespace Imaging
 	template <typename T, ::size_t N> template <typename U>
 	Array<T, N> Array<T, N>::operator+(const Array<U, N> &rhs) const
 	{
+		std::cout << "Array<T, N> Array<T, N>::operator+(const Array<U, N> &) const" << std::endl;
 		Array<T, N> result;
 		AddRange(this->data.cbegin(), this->data.cend(), rhs.data.cbegin(),
 			result.data.begin());
 		return result;
 	}
 
-	// NOTE: This function template is extremely tricky to implement.
-	// Must check if typename U is simple arithmetic, otherwise even Array<T, N> will be
-	// taken as U instead of the more specified type.
+	/* WARNING:
+	This function template is extremely tricky to implement.
+	Must check if typename U is simple arithmetic type, otherwise even Array<T, N> will be
+	taken as U instead of a more specified type.
+	*/
 	template <typename T, ::size_t N> template <typename U>
 	std::enable_if_t<std::is_arithmetic<U>::value, Array<T, N>>
 		Array<T, N>::operator+(U rhs) const
 	{
+		std::cout << "std::enable_if_t<std::is_arithmetic<U>::value, Array<T, N>> Array<T, N>::operator+(U) const" << std::endl;
 		Array<T, N> result;
 		auto it = this->data.cbegin(), itEnd = this->data.cend();
 		for (auto itDst = result.data.begin(); it != itEnd; ++it, ++itDst)
@@ -32,6 +36,7 @@ namespace Imaging
 	template <typename T, ::size_t N> template <typename U>
 	void Array<T, N>::operator+=(const Array<U, N> &rhs)
 	{
+		std::cout << "void Array<T, N>::operator+=(const Array<U, N> &)" << std::endl;
 		AddRange(this->data.begin(), this->data.end(), rhs.data.cbegin());
 	}
 
@@ -39,6 +44,7 @@ namespace Imaging
 	template <typename T, ::size_t N> template <typename U>
 	std::enable_if_t<std::is_arithmetic<U>::value, void> Array<T, N>::operator+=(U rhs)
 	{
+		std::cout << "std::enable_if_t<std::is_arithmetic<U>::value, void> Array<T, N>::operator+=(U)" << std::endl;
 		for (auto it = this->data.begin(), itEnd = this->data.end(); it != itEnd; ++it)
 			Add(*it, rhs, *it);
 	}
@@ -48,41 +54,31 @@ namespace Imaging
 
 	template <typename T>
 	Point2D<T>::Point2D(void) :
-		Array<T, 2>(), x(this->data.at(0)), y(this->data.at(1)) {}
+		Array<T, 2>(), x(this->data.at(0)), y(this->data.at(1))
+	{
+		std::cout << "Point2D<T>::Point2D(void)" << std::endl;
+	}
 
 	template <typename T>
 	Point2D<T>::Point2D(const Point2D<T> &src) :
-		Array<T, 2>(src), x(this->data.at(0)), y(this->data.at(1)) {}
-
-	template <typename T>
-	Point2D<T>::Point2D(Point2D<T> &&src) : Point2D<T>()
+		Array<T, 2>(src), x(this->data.at(0)), y(this->data.at(1))
 	{
-		this->Swap(src);
+		std::cout << "Point2D<T>::Point2D(const Point2D<T> &)" << std::endl;
 	}
 
-	// This operator=(Point2D<T>) replaces both operator=(const Point2D<T> &) and
-	// operator=(Point2D<T> &&) by using copy and swap idiom.
 	template <typename T>
-	Point2D<T> &Point2D<T>::operator=(Point2D<T> src)
+	Point2D<T> &Point2D<T>::operator=(const Point2D<T> &src)
 	{
-		this->Swap(src);
+		std::cout << "Point2D<T> &Point2D<T>::operator=(const Point2D<T> &)" << std::endl;
+		this->data = src.data;
 		return *this;
 	}
 
 	template <typename T>
-	Point2D<T>::Point2D(const Array<T, 2> &src) :
-		Array<T, 2>(src), x(this->data.at(0)), y(this->data.at(1)) {}
-
-	template <typename T>
-	Point2D<T>::Point2D(Array<T, 2> &&src) : Point2D<T>()
+	Point2D<T>::Point2D(const Array<T, 2> &srcData) :
+		Array<T, 2>(srcData), x(this->data.at(0)), y(this->data.at(1))
 	{
-		this->data.swap(src.data);
-	}
-
-	template <typename T>
-	void Point2D<T>::Swap(Point2D<T> &src)
-	{
-		this->data.swap(src.data);
+		std::cout << "Point2D<T>::Point2D(const Array<T, 2> &)" << std::endl;
 	}
 }
 

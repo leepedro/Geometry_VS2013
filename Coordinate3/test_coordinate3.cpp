@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "coordinate3.h"
 
 void TestArraySimple(void)
@@ -15,51 +17,71 @@ void TestArraySimple(void)
 template <typename T>
 void TestArray(void)
 {
+	// Default (undefined) ctor
+	Imaging::Array<T, 2> array1;
+
 	// Brace/Aggregate initialization.
-	Imaging::Array<T, 2> coord1 = { 1, 2 };
-	Imaging::Array<T, 2> coord2{ 3, 4 };
+	Imaging::Array<T, 2> array2 = { 1, 2 };
+	Imaging::Array<T, 2> array3{ 3, 4 };
 
 	// Following generates "C2078: too many initializers". Good!
-	//Imaging::Array<T, 2> coord3{ 3, 4, 5 };	// C2078: too many initializers
+	//Imaging::Array<T, 2> array4{ 3, 4, 5 };	// C2078: too many initializers
 	
-	// The operator+ works even OUTSIDE of the namespace. Great!
-	Imaging::Array<T, 2> coord3 = coord1 + coord2;
-	coord3 = coord1 + static_cast<T>(2);
-	coord3 = coord1 + static_cast<unsigned char>(2);
-	coord3 += coord1;
-	coord3 += static_cast<T>(2);
-	coord3 += static_cast<unsigned char>(2);
+	// The operators work OUTSIDE of the namespace. Great!
+
+	// Array<T, N> operator+(const Array<U, N> &) const
+	array1 = array2 + array2;
+
+	// std::enable_if_t<std::is_arithmetic<U>::value, Array<T, N>> operator+(U) const
+	array3 = array1 + static_cast<T>(2);
+	array3 = array2 + static_cast<unsigned char>(2);
+
+	// void operator+=(const Array<U, N> &)
+	array3 += array2;
+
+	// std::enable_if_t<std::is_arithmetic<U>::value, void> operator+=(U)
+	array3 += static_cast<T>(2);
+	array3 += static_cast<unsigned char>(2);
+
+	std::cout << std::endl;
 }
 
 template <typename T>
 void TestPoint2D(void)
 {
-	// Default ctor
+	// Point2D(void)
 	Imaging::Point2D<T> pt1;
 	pt1.x = 1, pt1.y = 2;
 
-	// This works by implicitly taking ctor Point2D(const Array<T, 2> &)
-	Imaging::Point2D<T> pt2({ 3, 4 });
+	// Point2D(const Point2D<T> &)
+	Imaging::Point2D<T> pt2 = pt1;
 
-	// ctor Point2D(const Point2D<T> &) is called WITHOUT operator=(Point2D<T> src).
-	Imaging::Point2D<T> pt3 = pt1;
+	// Point2D &operator=(const Point2D<T> &)
+	pt1.x = 10;
+	pt2 = pt1;
 
-	// operator=(Point2D<T> src) IS called here, and
-	// it implicitly called ctor Point2D(const Point2D<T> &).
-	pt3 = pt1;
-
-	// Array<T, N> examples.
-	Imaging::Array<T, 2> coord1{ 5, 6 };
-
-	// ctor Point2D(const Array<T, 2> &)
-	Imaging::Point2D<T> pt4(coord1);
-	Imaging::Point2D<T> pt5 = coord1;
+	// Point2D(const Array<T, N> &)
+	// This works because Array<T, N> can take aggregate initialization.
+	Imaging::Point2D<T> pt3({ 3, 4 });
+	Imaging::Array<T, 2> array1{ 5, 6 };
+	Imaging::Point2D<T> pt4(array1);
+	Imaging::Point2D<T> pt5 = array1;
 
 	//Imaging::Point2D<T> pt6 = { 11, 12 };	// NOT working.
 
-	// The operator+ works even OUTSIDE of the namespace. Great!
-	// This works by implicitly taking ctor Point2D(const Array<T, 2> &)
-	Imaging::Point2D<T> pt6 = pt1 + pt1;
+	// Point2D &operator=(const Array<T, 2> &) or
+	// Point2D(const Array<T, N> &) + Point2D &operator=(const Point2D<T> &)
+	pt5 = array1;
+
+	// The operators of Array<T, N> work OUTSIDE of the namespace. Great!
+	// Note: Using overloaded operators of Array<T> requires a ctor with Array<T>.
+
+	// Array<T, N> operator+(const Array<U, N> &) const +
+	// Point2D(const Array<T, 2> &) +
+	// Point2D &operator=(const Point2D<T> &)
+	pt5 = pt1 + pt1;
+
+	std::cout << std::endl;
 }
 
 int main(void)
