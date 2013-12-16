@@ -79,6 +79,7 @@
     <ClInclude Include="algorithms.h" />
     <ClInclude Include="coordinate3.h" />
     <ClInclude Include="coordinate3_inl.h" />
+    <ClInclude Include="safe_operations_problem.h" />
     <ClInclude Include="safe_operations.h" />
   </ItemGroup>
   <ItemGroup>

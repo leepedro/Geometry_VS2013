@@ -5,7 +5,7 @@
 
 namespace Imaging
 {
-	// A = B + C
+	// C = A + B
 	template <typename InputIterator, typename OutputIterator>
 	void AddRange(InputIterator it_a, InputIterator it_a_last, InputIterator it_b,
 		OutputIterator it_c)
