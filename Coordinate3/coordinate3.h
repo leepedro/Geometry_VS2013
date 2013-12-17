@@ -80,7 +80,7 @@ namespace Imaging
 		// Default constructors.
 		Size2D(void);
 		Size2D(const Size2D<T> &src);
-		Size2D &operator=(Size2D<T> src);
+		Size2D &operator=(const Size2D<T> &src);
 
 		////////////////////////////////////////////////////////////////////////////////////
 		// Custom constructors.

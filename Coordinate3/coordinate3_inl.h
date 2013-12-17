@@ -37,7 +37,7 @@ namespace Imaging
 	void Array<T, N>::operator+=(const Array<U, N> &rhs)
 	{
 		std::cout << "void Array<T, N>::operator+=(const Array<U, N> &)" << std::endl;
-		AddRange(this->data.begin(), this->data.end(), rhs.data.cbegin());
+		AddRange(rhs.data.cbegin(), rhs.data.cend(), this->data.begin());
 	}
 
 	// Again, type checking is mandatory for this function.

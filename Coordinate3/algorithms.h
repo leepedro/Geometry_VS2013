@@ -6,20 +6,20 @@
 namespace Imaging
 {
 	// C = A + B
-	template <typename InputIterator, typename OutputIterator>
-	void AddRange(InputIterator it_a, InputIterator it_a_last, InputIterator it_b,
-		OutputIterator it_c)
+	template <typename InputIteratorA, typename InputIteratorB, typename OutputIterator>
+	void AddRange(InputIteratorA itA, InputIteratorA itA_last, InputIteratorB itB,
+		OutputIterator itC)
 	{
-		for (; it_a != it_a_last; ++it_a, ++it_b, ++it_c)
-			Add(*it_a, *it_b, *it_c);
+		for (; itA != itA_last; ++itA, ++itB, ++itC)
+			Add(*itA, *itB, *itC);
 	}
 
-	// A += B
-	template <typename InputIterator, typename OutputIterator>
-	void AddRange(OutputIterator it_a, OutputIterator it_a_last, InputIterator it_b)
+	// B += A
+	template <typename InputIterator, typename InOutputIterator>
+	void AddRange(InputIterator itA, InputIterator itA_last, InOutputIterator itB)
 	{
-		for (; it_a != it_a_last; ++it_a, ++it_b)
-			Add(*it_a, *it_b, *it_a);
+		for (; itA != itA_last; ++itA, ++itB)
+			Add(*itB, *itA, *itB);
 	}
 }
 

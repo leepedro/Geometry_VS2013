@@ -18,7 +18,7 @@ template <typename T>
 void TestArray(void)
 {
 	// Default (undefined) ctor
-	Imaging::Array<T, 2> array1;
+	Imaging::Array<T, 2> array1;	// NON-ZERO!
 
 	// Brace/Aggregate initialization.
 	Imaging::Array<T, 2> array2 = { 1, 2 };
@@ -29,19 +29,20 @@ void TestArray(void)
 	
 	// The operators work OUTSIDE of the namespace. Great!
 
+	Imaging::Array<int, 2> arrayInt = { 1, 2 };
 	// Array<T, N> operator+(const Array<U, N> &) const
-	array1 = array2 + array2;
-
-	// std::enable_if_t<std::is_arithmetic<U>::value, Array<T, N>> operator+(U) const
-	array3 = array1 + static_cast<T>(2);
-	array3 = array2 + static_cast<unsigned char>(2);
+	Imaging::Array<T, 2> array4 = array2 + arrayInt;	// {2, 4}
 
 	// void operator+=(const Array<U, N> &)
-	array3 += array2;
+	Imaging::Array<T, 2> array5 = { 1, 2 };
+	array5 += arrayInt;	// {2, 4}
+
+	// std::enable_if_t<std::is_arithmetic<U>::value, Array<T, N>> operator+(U) const
+	Imaging::Array<T, 2> array6 = array2 + static_cast<int>(2);	// {3, 4}
 
 	// std::enable_if_t<std::is_arithmetic<U>::value, void> operator+=(U)
-	array3 += static_cast<T>(2);
-	array3 += static_cast<unsigned char>(2);
+	Imaging::Array<T, 2> array7 = { 1, 2 };
+	array7 += static_cast<T>(2);	// {3, 4}
 
 	std::cout << std::endl;
 }
@@ -86,8 +87,9 @@ void TestPoint2D(void)
 
 int main(void)
 {
-	TestArray<int>();
-	TestArray<double>();
+	TestArray<int>();				// T = int, U = int
+	TestArray<unsigned short>();	// T = unsigned short, U = int
+	TestArray<double>();			// T = double, U = int
 
 	TestPoint2D<int>();
 	TestPoint2D<double>();
