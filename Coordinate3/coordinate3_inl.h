@@ -6,6 +6,12 @@ namespace Imaging
 	////////////////////////////////////////////////////////////////////////////////////
 	// Array<T, N>
 
+	/*
+	std::array<T, N> cannot be used with std::initialization_list<T>.
+	*/
+	//template <typename T, ::size_t N>
+	//Array<T, N>::Array(const std::initializer_list<T> &srcList) : data(srcList) {}
+
 	template <typename T, ::size_t N> template <typename U>
 	Array<T, N> Array<T, N>::operator+(const Array<U, N> &rhs) const
 	{

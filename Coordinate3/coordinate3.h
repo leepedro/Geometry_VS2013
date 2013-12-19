@@ -31,6 +31,11 @@ namespace Imaging
 		static_assert(std::is_arithmetic<T>::value,
 			"Only arithmetic data types are supported for this class template.");
 	public:
+		/*
+		std::array<T, N> cannot be used with std::initialization_list<T>.
+		*/
+		//Array(const std::initializer_list<T> &srcList);
+
 		////////////////////////////////////////////////////////////////////////////////////
 		// Overloaded operators.
 		template <typename U>

@@ -2,6 +2,18 @@
 
 #include "coordinate3.h"
 
+void TestStdArray(void)
+{
+	// Valid aggregate initialization.
+	std::array<int, 2> array1 = { 1, 2 };
+
+	// Compiles with Intellisense warning. It IS valid.
+	std::array<int, 2> array2{ 1, 2 };
+
+	// Valid aggregate initialization.
+	std::array<int, 2> array3{ { 1, 2 } };
+}
+
 void TestArraySimple(void)
 {
 	// Valid aggregate initialization.
@@ -29,8 +41,8 @@ void TestArray(void)
 	
 	// The operators work OUTSIDE of the namespace. Great!
 
-	Imaging::Array<int, 2> arrayInt = { 1, 2 };
 	// Array<T, N> operator+(const Array<U, N> &) const
+	Imaging::Array<int, 2> arrayInt = { 1, 2 };
 	Imaging::Array<T, 2> array4 = array2 + arrayInt;	// {2, 4}
 
 	// void operator+=(const Array<U, N> &)
@@ -87,6 +99,8 @@ void TestPoint2D(void)
 
 int main(void)
 {
+	TestStdArray();
+
 	TestArray<int>();				// T = int, U = int
 	TestArray<unsigned short>();	// T = unsigned short, U = int
 	TestArray<double>();			// T = double, U = int
