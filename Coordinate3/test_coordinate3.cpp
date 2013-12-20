@@ -80,7 +80,8 @@ void TestPoint2D(void)
 	Imaging::Point2D<T> pt4(array1);
 	Imaging::Point2D<T> pt5 = array1;
 
-	//Imaging::Point2D<T> pt6 = { 11, 12 };	// NOT working.
+	// working with Point2D<T>(T, T) or Point2D(const std::initializer_list<T> &).
+	Imaging::Point2D<T> pt6 = { 11, 12 };
 
 	// Point2D &operator=(const Array<T, 2> &) or
 	// Point2D(const Array<T, N> &) + Point2D &operator=(const Point2D<T> &)
@@ -94,6 +95,7 @@ void TestPoint2D(void)
 	// Point2D &operator=(const Point2D<T> &)
 	pt5 = pt1 + pt1;
 
+	Imaging::Point2D<T> pt7 = Imaging::FuncA(pt1, { 1, 2 });
 	std::cout << std::endl;
 }
 

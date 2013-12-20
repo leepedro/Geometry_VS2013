@@ -71,9 +71,15 @@ namespace Imaging
 		// Custom constructors.
 		Point2D(const Array<T, 2> &srcData);
 		//Point2D &operator=(const Array<T, 2> &srcData);	// optional, no need
+		//Point2D(T x, T y);
+		Point2D(const std::initializer_list<T> &srcList);
 
-		T &x, &y;
+		T &x = this->data.at(0);
+		T &y = this->data.at(1);
 	};
+
+	template <typename T>
+	Point2D<T> FuncA(const Point2D<T> &src1, Point2D<T> src2);
 
 	template <typename T>
 	class Size2D : public Array<T, 2>
@@ -92,7 +98,8 @@ namespace Imaging
 		Size2D(const Array<T, 2> &src);
 		//Size2D &operator=(const Array<T, 2> &srcData);	// optional, no need
 
-		T &width, &height;
+		T &width = this->data.at(0);
+		T &height = this->data.at(1);
 	};
 }
 

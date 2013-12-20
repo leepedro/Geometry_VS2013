@@ -59,15 +59,13 @@ namespace Imaging
 	// Point2D<T>
 
 	template <typename T>
-	Point2D<T>::Point2D(void) :
-		Array<T, 2>(), x(this->data.at(0)), y(this->data.at(1))
+	Point2D<T>::Point2D(void) :	Array<T, 2>()
 	{
 		std::cout << "Point2D<T>::Point2D(void)" << std::endl;
 	}
 
 	template <typename T>
-	Point2D<T>::Point2D(const Point2D<T> &src) :
-		Array<T, 2>(src), x(this->data.at(0)), y(this->data.at(1))
+	Point2D<T>::Point2D(const Point2D<T> &src) : Array<T, 2>(src)
 	{
 		std::cout << "Point2D<T>::Point2D(const Point2D<T> &)" << std::endl;
 	}
@@ -81,11 +79,39 @@ namespace Imaging
 	}
 
 	template <typename T>
-	Point2D<T>::Point2D(const Array<T, 2> &srcData) :
-		Array<T, 2>(srcData), x(this->data.at(0)), y(this->data.at(1))
+	Point2D<T>::Point2D(const Array<T, 2> &srcData) : Array<T, 2>(srcData)
 	{
 		std::cout << "Point2D<T>::Point2D(const Array<T, 2> &)" << std::endl;
 	}
+
+	//template <typename T>
+	//Point2D<T>::Point2D(T x, T y) : Point2D<T>()
+	//{
+	//	std::cout << "Point2D<T>::Point2D(T x, T y)" << std::endl;
+	//	this->x = x;
+	//	this->y = y;
+	//}
+
+	template <typename T>
+	Point2D<T>::Point2D(const std::initializer_list<T> &srcList) : Point2D<T>()
+	{
+		std::cout << "Point2D<T>::Point2D(const std::initializer_list<T> &srcList)" << std::endl;
+		auto it = srcList.begin();
+		this->x = *it;
+		this->y = *(it + 1);
+	}
+
+
+	template <typename T>
+	Point2D<T> FuncA(const Point2D<T> &src1, Point2D<T> src2)
+	{
+		//Point2D<T> temp1 = std::move(temp);
+		Point2D<T> temp1 = src1;
+		temp1 += src2;
+		//return temp1;
+		return { 1, 2 };
+	}
+
 }
 
 #endif
