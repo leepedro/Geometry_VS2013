@@ -9,8 +9,8 @@
 Defines Array<T, N> class without any user defined ctor.
 Declares an std::array<T, 2> as a public member and it must be the only member.
 Overloads member operators for Array<T, N>.
-Derives Point2D<T> class from Coordinate<T, 2>.
-Defines custom ctor for Point2D<T> taking Coordinate<T, 2> as an argument even though it
+Derives Point2D<T> class from Array<T, 2>.
+Defines custom ctor for Point2D<T> taking Array<T, 2> as an argument even though it
 SHOULD NOT.
 
 Good:
@@ -25,14 +25,17 @@ there is not much benefit to implement them for its derived classes.
 */
 namespace Imaging
 {
-	template <typename T, ::size_t N>
+	template <typename T, std::size_t N>
 	class Array
 	{
 		static_assert(std::is_arithmetic<T>::value,
 			"Only arithmetic data types are supported for this class template.");
 	public:
 		/*
-		std::array<T, N> cannot be used with std::initialization_list<T>.
+		If a class has any custom ctor, then it must have other default ctors.
+		Think about which one is wiser choice between making default ctors for Array<T< N>
+		or adding initializer list ctor to every derived class.
+		Making ctor for base class seems better?
 		*/
 		//Array(const std::initializer_list<T> &srcList);
 
@@ -54,6 +57,10 @@ namespace Imaging
 		// Members.
 		std::array<T, N> data;
 	};
+
+	template <typename T, std::size_t N>
+	Array<T, N> FuncArray(const Array<T, N> &src);
+
 
 	template <typename T>
 	class Point2D : public Array<T, 2>
@@ -79,7 +86,7 @@ namespace Imaging
 	};
 
 	template <typename T>
-	Point2D<T> FuncA(const Point2D<T> &src1, Point2D<T> src2);
+	Point2D<T> FuncA(const Point2D<T> &src1, const Point2D<T> &src2);
 
 	template <typename T>
 	class Size2D : public Array<T, 2>

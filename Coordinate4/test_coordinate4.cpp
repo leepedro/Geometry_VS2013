@@ -1,6 +1,7 @@
 #include <iostream>
 
-#include "coordinate3.h"
+#include "containers.h"
+//#include "coordinate4.h"
 
 void TestStdArray(void)
 {
@@ -40,7 +41,7 @@ void TestArray(void)
 
 	// Following generates "C2078: too many initializers". Good!
 	//Imaging::Array<T, 2> array4{ 3, 4, 5 };	// C2078: too many initializers
-	
+
 	// The operators work OUTSIDE of the namespace. Great!
 
 	// Array<T, N> operator+(const Array<U, N> &) const
@@ -66,54 +67,6 @@ void TestArray(void)
 	std::cout << std::endl;
 }
 
-template <typename T>
-void TestPoint2D(void)
-{
-	std::cout << "Constructors of Point2D<" << typeid(T).name() << ">" << std::endl;
-
-	// Point2D(void)
-	Imaging::Point2D<T> pt1;
-	pt1.x = 1, pt1.y = 2;
-
-	// Point2D(const Point2D<T> &)
-	Imaging::Point2D<T> pt2 = pt1;
-
-	// Point2D &operator=(const Point2D<T> &)
-	pt1.x = 10;
-	pt2 = pt1;
-
-	// Point2D(const Array<T, N> &)
-	// This works because Array<T, N> can take aggregate initialization.
-	Imaging::Array<T, 2> array1{ 5, 6 };
-	Imaging::Point2D<T> pt4(array1);
-	Imaging::Point2D<T> pt5 = array1;
-
-	// Point2D(void) + Point2D(const std::initializer_list<T> &)
-	Imaging::Point2D<T> pt3({ 3, 4 });
-
-	// Point2D(void) + {Point2D<T>(T, T) or Point2D(const std::initializer_list<T> &)}.
-	Imaging::Point2D<T> pt6 = { 11, 12 };
-
-	// Point2D &operator=(const Array<T, 2> &) or
-	// Point2D(const Array<T, N> &) + Point2D &operator=(const Point2D<T> &)
-	pt5 = array1;
-
-	// The operators of Array<T, N> work OUTSIDE of the namespace. Great!
-	// Note: Using overloaded operators of Array<T> requires a ctor with Array<T>.
-
-	// Array<T, N> operator+(const Array<U, N> &) const +
-	// Point2D(const Array<T, 2> &) +
-	// Point2D &operator=(const Point2D<T> &)
-	pt5 = pt1 + pt1;
-
-	// Arguments.
-	std::cout << "Constructors as function arguments" << std::endl;
-
-	// Point2D(void) + Point2D(const std::initializer_list<T> &) for input argument.
-	Imaging::Point2D<T> pt7 = Imaging::FuncA<T>(pt1, { 1, 2 });
-	std::cout << std::endl;
-}
-
 int main(void)
 {
 	TestStdArray();
@@ -122,8 +75,8 @@ int main(void)
 	TestArray<unsigned short>();	// T = unsigned short, U = int
 	TestArray<double>();			// T = double, U = int
 
-	TestPoint2D<int>();
-	TestPoint2D<double>();
+	//TestPoint2D<int>();
+	//TestPoint2D<double>();
 
 	// Following line generates C2338 with customized error message. GREAT!
 	// This is better than std::enable_if<T> from <type_traits>.

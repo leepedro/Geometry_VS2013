@@ -10,7 +10,13 @@ namespace Imaging
 	std::array<T, N> cannot be used with std::initialization_list<T>.
 	*/
 	//template <typename T, ::size_t N>
-	//Array<T, N>::Array(const std::initializer_list<T> &srcList) : data(srcList) {}
+	//Array<T, N>::Array(const std::initializer_list<T> &srcList)
+	//{
+	//	std::cout << "Array<T, N>::Array(const std::initializer_list<T> &)" << std::endl;
+	//	// TODO: Should check the size of srcList here.
+	//	for (auto it = srcList.begin(); it != srcList.end(); ++it)
+	//		std::copy(srcList.begin(), srcList.end(), this->data.begin());
+	//}
 
 	template <typename T, ::size_t N> template <typename U>
 	Array<T, N> Array<T, N>::operator+(const Array<U, N> &rhs) const
@@ -55,6 +61,13 @@ namespace Imaging
 			Add(*it, rhs, *it);
 	}
 
+	template <typename T, std::size_t N>
+	Array<T, N> FuncArray(const Array<T, N> &src)
+	{
+		// ???
+		return{ 1, 3 };
+	}
+
 	////////////////////////////////////////////////////////////////////////////////////
 	// Point2D<T>
 
@@ -96,19 +109,15 @@ namespace Imaging
 	Point2D<T>::Point2D(const std::initializer_list<T> &srcList) : Point2D<T>()
 	{
 		std::cout << "Point2D<T>::Point2D(const std::initializer_list<T> &srcList)" << std::endl;
-		auto it = srcList.begin();
-		this->x = *it;
-		this->y = *(it + 1);
+		for (auto it = srcList.begin(); it != srcList.end(); ++it)
+			std::copy(srcList.begin(), srcList.end(), this->data.begin());
 	}
 
 
 	template <typename T>
-	Point2D<T> FuncA(const Point2D<T> &src1, Point2D<T> src2)
+	Point2D<T> FuncA(const Point2D<T> &src1, const Point2D<T> &src2)
 	{
-		//Point2D<T> temp1 = std::move(temp);
-		Point2D<T> temp1 = src1;
-		temp1 += src2;
-		//return temp1;
+		// Point2D(const std::initializer_list<T> &)
 		return { 1, 2 };
 	}
 

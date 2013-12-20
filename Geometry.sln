@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Coordinate2", "Coordinate2\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Coordinate3", "Coordinate3\Coordinate3.vcxproj", "{F7E5B44F-7DCA-4543-80B7-C09A3A970764}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Coordinate4", "Coordinate4\Coordinate4.vcxproj", "{8ED13332-92D2-4B4C-87AE-45FFCDFF2869}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -27,6 +29,10 @@ Global
 		{F7E5B44F-7DCA-4543-80B7-C09A3A970764}.Debug|Win32.Build.0 = Debug|Win32
 		{F7E5B44F-7DCA-4543-80B7-C09A3A970764}.Release|Win32.ActiveCfg = Release|Win32
 		{F7E5B44F-7DCA-4543-80B7-C09A3A970764}.Release|Win32.Build.0 = Release|Win32
+		{8ED13332-92D2-4B4C-87AE-45FFCDFF2869}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8ED13332-92D2-4B4C-87AE-45FFCDFF2869}.Debug|Win32.Build.0 = Debug|Win32
+		{8ED13332-92D2-4B4C-87AE-45FFCDFF2869}.Release|Win32.ActiveCfg = Release|Win32
+		{8ED13332-92D2-4B4C-87AE-45FFCDFF2869}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
