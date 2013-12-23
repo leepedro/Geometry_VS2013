@@ -6,18 +6,6 @@ namespace Imaging
 	////////////////////////////////////////////////////////////////////////////////////
 	// Array<T, N>
 
-	/*
-	std::array<T, N> cannot be used with std::initialization_list<T>.
-	*/
-	//template <typename T, ::size_t N>
-	//Array<T, N>::Array(const std::initializer_list<T> &srcList)
-	//{
-	//	std::cout << "Array<T, N>::Array(const std::initializer_list<T> &)" << std::endl;
-	//	// TODO: Should check the size of srcList here.
-	//	for (auto it = srcList.begin(); it != srcList.end(); ++it)
-	//		std::copy(srcList.begin(), srcList.end(), this->data.begin());
-	//}
-
 	template <typename T, ::size_t N> template <typename U>
 	Array<T, N> Array<T, N>::operator+(const Array<U, N> &rhs) const
 	{
@@ -61,35 +49,41 @@ namespace Imaging
 			Add(*it, rhs, *it);
 	}
 
-	template <typename T, std::size_t N>
-	Array<T, N> FuncArray(const Array<T, N> &src)
+	template <typename T, ::size_t N>
+	Array<T, N> &Array<T, N>::operator++(void)
 	{
-		// ???
+		std::cout << "Array<T, N> &Array<T, N>::operator++(void)" << std::endl;
+		IncrementRange(this->data.begin(), this->data.end());
+		return *this;
+	}
+
+	template <typename T, ::size_t N>
+	Array<T, N> Array<T, N>::operator++(int)
+	{
+		std::cout << "Array<T, N> Array<T, N>::operator++(int)" << std::endl;
+		Array<T, N> temp = *this;
+		++*this;
+		return temp;
+	}
+
+	// Array<T, N>
+	////////////////////////////////////////////////////////////////////////////////////
+
+	template <typename T, std::size_t N>
+	Array<T, 2> TakeArrayReturn(const Array<T, N> &src)
+	{
+		std::cout << "Array<T, 2> TakeArrayReturn(const Array<T, N> &)" << std::endl;
 		return{ 1, 3 };
+	}
+
+	template <typename T, std::size_t N>
+	void TakeArray(const Array<T, N> &src)
+	{
+		std::cout << "void TakeArray(const Array<T, N> &)" << std::endl;
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////
 	// Point2D<T>
-
-	template <typename T>
-	Point2D<T>::Point2D(void) :	Array<T, 2>()
-	{
-		std::cout << "Point2D<T>::Point2D(void)" << std::endl;
-	}
-
-	template <typename T>
-	Point2D<T>::Point2D(const Point2D<T> &src) : Array<T, 2>(src)
-	{
-		std::cout << "Point2D<T>::Point2D(const Point2D<T> &)" << std::endl;
-	}
-
-	template <typename T>
-	Point2D<T> &Point2D<T>::operator=(const Point2D<T> &src)
-	{
-		std::cout << "Point2D<T> &Point2D<T>::operator=(const Point2D<T> &)" << std::endl;
-		this->data = src.data;
-		return *this;
-	}
 
 	template <typename T>
 	Point2D<T>::Point2D(const Array<T, 2> &srcData) : Array<T, 2>(srcData)
@@ -97,28 +91,28 @@ namespace Imaging
 		std::cout << "Point2D<T>::Point2D(const Array<T, 2> &)" << std::endl;
 	}
 
-	//template <typename T>
-	//Point2D<T>::Point2D(T x, T y) : Point2D<T>()
-	//{
-	//	std::cout << "Point2D<T>::Point2D(T x, T y)" << std::endl;
-	//	this->x = x;
-	//	this->y = y;
-	//}
-
 	template <typename T>
-	Point2D<T>::Point2D(const std::initializer_list<T> &srcList) : Point2D<T>()
+	Point2D<T>::Point2D(T x, T y) : Point2D<T>()
 	{
-		std::cout << "Point2D<T>::Point2D(const std::initializer_list<T> &srcList)" << std::endl;
-		for (auto it = srcList.begin(); it != srcList.end(); ++it)
-			std::copy(srcList.begin(), srcList.end(), this->data.begin());
+		std::cout << "Point2D<T>::Point2D(T, T)" << std::endl;
+		this->x = x;
+		this->y = y;
 	}
 
+	// Point2D<T>
+	////////////////////////////////////////////////////////////////////////////////////
 
 	template <typename T>
-	Point2D<T> FuncA(const Point2D<T> &src1, const Point2D<T> &src2)
+	Point2D<T> TakePoint2DReturn(const Point2D<T> &src)
 	{
-		// Point2D(const std::initializer_list<T> &)
-		return { 1, 2 };
+		std::cout << "Point2D<T> TakeArrayReturn(const Point2D<T> &)" << std::endl;
+		return{ 1, 2 };
+	}
+
+	template <typename T>
+	void TakePoint2D(const Point2D<T> &src)
+	{
+		std::cout << "void TakeArrayReturn(const Point2D<T> &)" << std::endl;
 	}
 
 }

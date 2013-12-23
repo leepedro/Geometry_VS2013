@@ -21,6 +21,14 @@ namespace Imaging
 		for (; itA != itA_last; ++itA, ++itB)
 			Add(*itB, *itA, *itB);
 	}
+
+	// ++A
+	template <typename Iterator>
+	void IncrementRange(Iterator it, Iterator itLast)
+	{
+		for (; it != itLast; ++it)
+			Increment(*it);
+	}
 }
 
 #endif

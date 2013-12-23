@@ -9,19 +9,22 @@
 Defines Array<T, N> class without any user defined ctor.
 Declares an std::array<T, 2> as a public member and it must be the only member.
 Overloads member operators for Array<T, N>.
-Derives Point2D<T> class from Array<T, 2>.
+Derives Point2D<T> class later from Array<T, 2>.
 Defines custom ctor for Point2D<T> taking Array<T, 2> as an argument even though it
 SHOULD NOT.
 
 Good:
 Can do aggregate instantiation of Array<T, N> like std::array<T, N>.
-Instantiation is easy aggregate initialization; as good as coordinate1.
 Overloaded operators for Array<T, N> still works works for derived classes.
 Overloaded member operators works outside of the namespace.
+Visual Studio debugging interface is slightly more convenient if std::array<T, N> is
+a member of Array<T, N> instead of the base class.
+
+
+NOTE: Since std::array<T, N> cannot be used with a move ctor, there is not much benefit to
+implement them for its derived classes.
 
 So far, this seems the best approach.
-NOTE: Since std::array<T, N> cannot be used with std::initialization_list<T> or a move ctor,
-there is not much benefit to implement them for its derived classes.
 */
 namespace Imaging
 {
@@ -31,27 +34,30 @@ namespace Imaging
 		static_assert(std::is_arithmetic<T>::value,
 			"Only arithmetic data types are supported for this class template.");
 	public:
-		/*
-		If a class has any custom ctor, then it must have other default ctors.
-		Think about which one is wiser choice between making default ctors for Array<T< N>
-		or adding initializer list ctor to every derived class.
-		Making ctor for base class seems better?
-		*/
-		//Array(const std::initializer_list<T> &srcList);
-
 		////////////////////////////////////////////////////////////////////////////////////
 		// Overloaded operators.
+
+		// A = B + C
 		template <typename U>
 		Array<T, N> operator+(const Array<U, N> &rhs) const;
 
+		// A = B + c
 		template <typename U>
 		std::enable_if_t<std::is_arithmetic<U>::value, Array<T, N>> operator+(U rhs) const;
 
+		// A += B
 		template <typename U>
 		void operator+=(const Array<U, N> &rhs);
 
+		// A += b
 		template <typename U>
 		std::enable_if_t<std::is_arithmetic<U>::value, void> operator+=(U rhs);
+
+		// ++A
+		Array<T, N> &operator++(void);
+
+		// A++
+		Array<T, N> operator++(int);
 
 		////////////////////////////////////////////////////////////////////////////////////
 		// Members.
@@ -59,7 +65,10 @@ namespace Imaging
 	};
 
 	template <typename T, std::size_t N>
-	Array<T, N> FuncArray(const Array<T, N> &src);
+	Array<T, 2> TakeArrayReturn(const Array<T, N> &src);
+
+	template <typename T, std::size_t N>
+	void TakeArray(const Array<T, N> &src);
 
 
 	template <typename T>
@@ -70,23 +79,24 @@ namespace Imaging
 	public:
 		////////////////////////////////////////////////////////////////////////////////////
 		// Default constructors.
-		Point2D(void);
-		Point2D(const Point2D<T> &src);
-		Point2D &operator=(const Point2D<T> &src);
+		Point2D(void) = default;
+		Point2D &operator=(const Point2D<T> &src) = default;
 
 		////////////////////////////////////////////////////////////////////////////////////
 		// Custom constructors.
 		Point2D(const Array<T, 2> &srcData);
-		//Point2D &operator=(const Array<T, 2> &srcData);	// optional, no need
-		//Point2D(T x, T y);
-		Point2D(const std::initializer_list<T> &srcList);
+		Point2D(T x, T y);
 
 		T &x = this->data.at(0);
 		T &y = this->data.at(1);
 	};
 
 	template <typename T>
-	Point2D<T> FuncA(const Point2D<T> &src1, const Point2D<T> &src2);
+	Point2D<T> TakePoint2DReturn(const Point2D<T> &src);
+
+	template <typename T>
+	void TakePoint2D(const Point2D<T> &src);
+
 
 	template <typename T>
 	class Size2D : public Array<T, 2>
@@ -96,14 +106,13 @@ namespace Imaging
 	public:
 		////////////////////////////////////////////////////////////////////////////////////
 		// Default constructors.
-		Size2D(void);
-		Size2D(const Size2D<T> &src);
-		Size2D &operator=(const Size2D<T> &src);
+		Size2D(void) = default;
+		Size2D &operator=(const Size2D<T> &src) = default;
 
 		////////////////////////////////////////////////////////////////////////////////////
 		// Custom constructors.
 		Size2D(const Array<T, 2> &src);
-		//Size2D &operator=(const Array<T, 2> &srcData);	// optional, no need
+		Size2D(T w, T h);
 
 		T &width = this->data.at(0);
 		T &height = this->data.at(1);

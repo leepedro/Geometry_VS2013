@@ -21,10 +21,16 @@
     <ClInclude Include="safe_operations.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="containers.h">
+    <ClInclude Include="coordinate4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="containers_inl.h">
+    <ClInclude Include="coordinate4_inl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="containers4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="containers4_inl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

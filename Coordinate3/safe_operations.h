@@ -82,6 +82,24 @@ namespace Imaging
 	{
 		result = t - u;
 	}
+
+	template <typename T>
+	std::enable_if_t<std::is_arithmetic<T>::value, void> Increment(T &value)
+	{
+		Increment_imp(value, std::is_integral<T>());
+	}
+
+	template <typename T>
+	void Increment_imp(T &value, std::true_type)
+	{
+		Add(value, 1, value);
+	}
+
+	template <typename T>
+	void Increment_imp(T &value, std::false_type)
+	{
+		++value;
+	}
 }
 
 #endif
