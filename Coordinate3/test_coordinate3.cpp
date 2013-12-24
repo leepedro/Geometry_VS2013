@@ -165,6 +165,8 @@ int main(void)
 	TestPoint2D<float>();
 	TestPoint2D<double>();
 
+	//Imaging::Point2D<double> pt = Imaging::Point2D<int>(1, 2);
+
 	// Following line generates C2338 with customized error message. GREAT!
 	// This is better than std::enable_if<T> from <type_traits>.
 	//TestPoint2D<std::string>();
