@@ -66,6 +66,17 @@ namespace Imaging
 		return temp;
 	}
 
+	//template <typename T, ::size_t N> template <typename U>
+	//Array<T, N>::operator Array<U, N>()
+	//{
+	//	std::cout << "Array<T, N>::operator Array<U, N>()" << std::endl;
+	//	Array<U, N> dst;
+	//	auto itDst = dst.data.begin();
+	//	for (auto it = this->data.cbegin(), itEnd = this->data.cend(); it != itEnd; ++it, ++itDst)
+	//		*itDst = Cast<U>(*it);
+	//	return dst;
+	//}
+
 	// Array<T, N>
 	////////////////////////////////////////////////////////////////////////////////////
 
@@ -84,6 +95,17 @@ namespace Imaging
 
 	////////////////////////////////////////////////////////////////////////////////////
 	// Point2D<T>
+
+	/*
+	This ctor is called only when T and U are different.
+	*/
+	template <typename T> template <typename U>
+	Point2D<T>::Point2D(const Point2D<U> &src) : Point2D<T>()
+	{
+		std::cout << "Point2D<T>::Point2D(const Point2D<U> &src)" << std::endl;
+		this->x = Cast<T>(src.x);
+		this->y = Cast<T>(src.y);
+	}
 
 	template <typename T>
 	Point2D<T>::Point2D(const Array<T, 2> &srcData) : Array<T, 2>(srcData)

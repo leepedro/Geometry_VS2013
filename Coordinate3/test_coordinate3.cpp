@@ -1,6 +1,13 @@
 #include <iostream>
+#include <vector>
 
 #include "coordinate3.h"
+
+void TestCasting(void)
+{
+	int a = Imaging::Cast<int>(3.0);
+	float b = Imaging::Cast<float>(3);
+}
 
 void TestStdArray(void)
 {
@@ -66,15 +73,19 @@ void TestArray(void)
 	// Array<T, N> operator++(int)
 	array10++;						// {2, 3}
 
+	// operator Array<U, N>()
+	//Imaging::Array<T, 2> array11 = arrayInt;
+	//arrayInt = array11;
+
 	// Function arguments.
 	std::cout << "Constructors as function arguments" << std::endl;
 
 	// (default) Array<T, N>(const Array<T, N> &) for input argument.
-	Imaging::Array<T, 2> array11 = Imaging::TakeArrayReturn<T, 2>(array1);
+	Imaging::Array<T, 2> array12 = Imaging::TakeArrayReturn<T, 2>(array1);
 	Imaging::TakeArray<T, 2>(array1);
 
 	// Aggregate initialization for input argument.
-	Imaging::Array<T, 2> array12 = Imaging::TakeArrayReturn<T, 2>({ 10, 20 });
+	Imaging::Array<T, 2> array13 = Imaging::TakeArrayReturn<T, 2>({ 10, 20 });
 	Imaging::TakeArray<T, 2>({ 10, 20 });
 
 	std::cout << std::endl;
@@ -115,7 +126,8 @@ void TestPoint2D(void)
 	// Note: Using overloaded operators of Array<T> requires a ctor with Array<T>.
 
 	// Array<T, N> operator+(const Array<U, N> &)
-	Imaging::Point2D<T> pt11 = pt1 + pt1;
+	Imaging::Point2D<int> ptInt = { 1, 2 };
+	Imaging::Point2D<T> pt11 = pt1 + ptInt;
 
 	// Array<T, N>> operator+(U)
 	Imaging::Point2D<T> pt12 = pt1 + 2;
@@ -133,15 +145,20 @@ void TestPoint2D(void)
 	// Array<T, N> operator++(int)
 	pt16++;
 
+	// operator Array<U, N>()
+	Imaging::Point2D<T> pt17 = ptInt;
+	ptInt = pt17;
+
+
 	// Function arguments.
 	std::cout << "Constructors as function arguments" << std::endl;
 
 	// (default) Point2D(const Point2D<T> &) for input argument.
-	Imaging::Point2D<T> pt17 = Imaging::TakePoint2DReturn(pt1);
+	Imaging::Point2D<T> pt18 = Imaging::TakePoint2DReturn(pt1);
 	Imaging::TakePoint2D(pt1);
 
 	// Point2D<T>(T, T) though uniform initialization for input argument.
-	Imaging::Point2D<T> pt18 = Imaging::TakePoint2DReturn<T>({ 1, 2 });
+	Imaging::Point2D<T> pt19 = Imaging::TakePoint2DReturn<T>({ 1, 2 });
 	Imaging::TakePoint2D<T>({ 1, 2 });
 
 	// Point2D<T> as const Array<T, 2> &
@@ -152,6 +169,8 @@ void TestPoint2D(void)
 
 int main(void)
 {
+	TestCasting();
+
 	TestStdArray();
 
 	TestArraySimple();
