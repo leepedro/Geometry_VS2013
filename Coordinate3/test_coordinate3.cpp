@@ -145,9 +145,10 @@ void TestPoint2D(void)
 	// Array<T, N> operator++(int)
 	pt16++;
 
-	// operator Array<U, N>()
+	// Point2D(const Point2D<U> &);
 	Imaging::Point2D<T> pt17 = ptInt;
 	ptInt = pt17;
+	pt17 = ptInt;
 
 
 	// Function arguments.
