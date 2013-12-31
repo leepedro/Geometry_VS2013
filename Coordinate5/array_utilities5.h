@@ -6,9 +6,13 @@ This header file declares and defines operators for std::array<T, N>.
 The operators are defined under global namespace for easier use. (maybe a bad idea?)
 */
 
-/* Operations between different data types.
+/* Operations between containers with different data types.
+C++ does not support operations between containers with different data types, so custom
+feature needs to be implemented.
+Function overload is a good way to do this.
 Since C++ cannot overload different functions for different return data types, it is
-necessary to force return argument at function parameter list.
+necessary to place return value at the function parameter list and return it as a reference.
+
 Define operators for only the same type operations.
 Use the functions defined in algorithm.h for different data types.
 */
