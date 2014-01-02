@@ -24,6 +24,12 @@
     <ClInclude Include="array_utilities5.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="coordinate5.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="coordinate5_inl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="test_coordinate5.cpp">

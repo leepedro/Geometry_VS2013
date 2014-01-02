@@ -57,13 +57,16 @@ namespace Imaging
 	 std::enable_if_t<!std::is_same<T, U>::value, void> Func(T, U, U &)
 	 
 	Scenario 1 and 2 can be merged as
-	 template <typename T, typename U> void Func(T, U, T &). */
+	 template <typename T, typename U> void Func(T, U, T &).
+	Order-dependent operations can still use the scenario 1 and 2 even though scenario 3 is
+	not possible. */
 
 	/* Operations between integral type (regardless of same or different data types).
 	The functions of safe int library (either the built-in safeint.h for Visual C++ or
 	the SafeInt.hpp from http://safeint.codeplex.com) can detect overflow.
 	
-	Always use the functions in the safe int libraries. */
+	Always use the functions in the safe int libraries.
+	Due to its syntax, the argument must be always in the order of (T, U, T&). */
 
 	/* Operations between floating point type.
 	As long as the result is the same or wider than the two source data, precision loss does
@@ -188,13 +191,113 @@ namespace Imaging
 	// Add
 	////////////////////////////////////////////////////////////////////////////////////////
 
+
 	////////////////////////////////////////////////////////////////////////////////////////
-	// Subtract
-	// Warning: Unlike addition, the order of arguments not interchangable for subtraction. 
+	// Multiply
 
 	////////////////////////////////////////////////////////////////////////////////////////
 	// High level functions for end-users.
 	// NOTE: The result data type could be T or U for these high-level function templates.
+
+	// 1. Same data type only. T = T * T (T * T => T)
+	// 2. Different data type scenario A. T = T * U (T * U => T)
+	template <typename T, typename U>
+	void Multiply(T t, U u, T &result)
+	{
+		static_assert(std::is_arithmetic<T>::value && std::is_arithmetic<U>::value,
+			"Only arithmetic data types are supported for this function template.");
+		Multiply_imp(t, u, result, std::is_integral<T>(), std::is_integral<U>());
+	}
+
+	// 3. Different data type scenario B. U = T * U (T * U => U)
+	template <typename T, typename U>
+	std::enable_if_t<!std::is_same<T, U>::value, void> Multiply(T t, U u, U &result)
+	{
+		static_assert(std::is_arithmetic<T>::value && std::is_arithmetic<U>::value,
+			"Only arithmetic data types are supported for this function template.");
+		Multiply_imp(u, t, result, std::is_integral<U>(), std::is_integral<T>());
+	}
+
+	// High level functions for end-users.
+	////////////////////////////////////////////////////////////////////////////////////////
+
+	////////////////////////////////////////////////////////////////////////////////////////
+	// Low level functions for internal only.
+	// NOTE: The result data type is always T for these low-level function templates.
+
+	// integral = integral * integral; checking overflow.
+	template <typename T, typename U>
+	void Multiply_imp(T t, U u, T &result, std::true_type, std::true_type)
+	{
+		if (!SafeMultiply(t, u, result))
+		{
+			std::ostringstream errMsg;
+			errMsg << "The result value exceeds the limit of " << typeid(result).name();
+			throw std::overflow_error(errMsg.str());
+		}
+	}
+
+	// integral = integral * floating; Disabled becasue of data loss risk.
+	template <typename T, typename U>
+	void Multiply_imp(T t, U u, T &result, std::true_type, std::false_type)
+	{
+		static_assert(!std::is_integral<T>::value || std::is_integral<U>::value,
+			"The result data type must be floating point type if any source value is "
+			"floating point type.");
+		throw std::logic_error("This function must not be called as it is disabled.");
+	}
+
+	// floating = floating * integral. sizeof(result) > sizeof(src)
+	template <typename T, typename U>
+	std::enable_if_t<(sizeof(T) > sizeof(U)), void> Multiply_imp(T t, U u, T &result,
+		std::false_type, std::true_type)
+	{
+		result = t * u;
+	}
+
+	// floating = floating * integral. sizeof(result) <= sizeof(src)
+	// Disabled becasue of data loss risk.
+	template <typename T, typename U>
+	std::enable_if_t<sizeof(T) <= sizeof(U), void> Multiply_imp(T t, U u, T &result,
+		std::false_type, std::true_type)
+	{
+		static_assert(sizeof(T) > sizeof(U),
+			"The result data type must be wider than source data types.");
+		throw std::logic_error("This function must not be called as it is disabled.");
+	}
+
+	// floating = floating * floating. sizeof(result) >= sizeof(src)
+	template <typename T, typename U>
+	std::enable_if_t<sizeof(T) >= sizeof(U), void> Multiply_imp(T t, U u, T &result,
+		std::false_type, std::false_type)
+	{
+		result = t * u;
+	}
+
+	// floating = floating * floating. sizeof(result) < sizeof(src)
+	// Disabled becasue of data loss risk.
+	template <typename T, typename U>
+	std::enable_if_t<sizeof(T) < sizeof(U), void> Multiply_imp(T t, U u, T &result,
+		std::false_type, std::false_type)
+	{
+		static_assert(sizeof(T) >= sizeof(U),
+			"The result data type must be the same or wider than source data types.");
+		throw std::logic_error("This function must not be called as it is disabled.");
+	}
+
+	// Low level functions for internal only.
+	////////////////////////////////////////////////////////////////////////////////////////
+
+	// Multiply
+	////////////////////////////////////////////////////////////////////////////////////////
+
+
+	////////////////////////////////////////////////////////////////////////////////////////
+	// Subtract
+
+	////////////////////////////////////////////////////////////////////////////////////////
+	// High level functions for end-users.
+	// NOTE: The result data type is always T for subtraction or division.
 
 	// 1. Same data type only. T = T - T (T - T => T)
 	// 2. Different data type scenario A. T = T - U (T - U => T)
@@ -207,14 +310,14 @@ namespace Imaging
 	}
 
 	// 3. Different data type scenario B. U = T - U (T - U => U)
-	// Unlike add operation, the order of arguments matter for subtraction.
-	// Adding negative sign do the trick. working??? 
 	template <typename T, typename U>
 	std::enable_if_t<!std::is_same<T, U>::value, void> Subtract(T t, U u, U &result)
 	{
 		static_assert(std::is_arithmetic<T>::value && std::is_arithmetic<U>::value,
 			"Only arithmetic data types are supported for this function template.");
-		Subtract_imp(-u, -t, result, std::is_integral<U>(), std::is_integral<T>());
+		static_assert(std::is_same<T, U>::value,
+			"The first source value must be the same type as the result value.");
+		throw std::logic_error("This function must not be called as it is disabled.");
 	}
 
 	// High level functions for end-users.
@@ -222,7 +325,6 @@ namespace Imaging
 
 	////////////////////////////////////////////////////////////////////////////////////////
 	// Low level functions for internal only.
-	// NOTE: The result data type is always T for these low-level function templates.
 
 	// integral = integral - integral; checking overflow.
 	template <typename T, typename U>
@@ -251,7 +353,7 @@ namespace Imaging
 	std::enable_if_t<(sizeof(T) > sizeof(U)), void> Subtract_imp(T t, U u, T &result,
 		std::false_type, std::true_type)
 	{
-		result = t + u;
+		result = t - u;
 	}
 
 	// floating = floating - integral. sizeof(result) <= sizeof(src)
@@ -270,7 +372,7 @@ namespace Imaging
 	std::enable_if_t<sizeof(T) >= sizeof(U), void> Subtract_imp(T t, U u, T &result,
 		std::false_type, std::false_type)
 	{
-		result = t + u;
+		result = t - u;
 	}
 
 	// floating = floating - floating. sizeof(result) < sizeof(src)
@@ -290,48 +392,6 @@ namespace Imaging
 	// Subtract
 	////////////////////////////////////////////////////////////////////////////////////////
 
-	template <typename T, typename U>
-	void Multiply(T t, U u, T &result)
-	{
-		static_assert(std::is_arithmetic<T>::value && std::is_arithmetic<U>::value,
-			"Only arithmetic data types are supported for this function template.");
-		Multiply_imp(t, u, result, std::is_integral<T>(), std::is_integral<U>());
-	}
-
-	// integral = integral * integral; checking overflow.
-	template <typename T, typename U>
-	void Multiply_imp(T t, U u, T &result, std::true_type, std::true_type)
-	{
-		if (!SafeMultiply(t, u, result))
-		{
-			std::ostringstream errMsg;
-			errMsg << "The result of add operation exceeds the limit of " <<
-				typeid(result).name() << " data type.";
-			throw std::overflow_error(errMsg.str());
-		}
-	}
-
-	// integral = integral - floating; unsupported and disabled.
-	template <typename T, typename U>
-	void Multiply_imp(T t, U u, T &result, std::true_type, std::false_type)
-	{
-		static_assert(std::is_integral<T>::value && !std::is_integral<U>::value,
-			"Unsupported scenario.");
-	}
-
-	// floating = floating - integral.
-	template <typename T, typename U>
-	void Multiply_imp(T t, U u, T &result, std::false_type, std::true_type)
-	{
-		result = t * u;
-	}
-
-	// floating = floating - floating.
-	template <typename T, typename U>
-	void Multiply_imp(T t, U u, T &result, std::false_type, std::false_type)
-	{
-		result = t * u;
-	}
 
 	template <typename T>
 	void Increment(T &value)
@@ -391,11 +451,10 @@ namespace Imaging
 	template <typename T, typename U>
 	void Cast_imp(U src, T &dst, std::true_type, std::true_type)
 	{
-		if (!msl::utilities::SafeCast(src, dst))
+		if (!SafeCast(src, dst))
 		{
 			std::ostringstream errMsg;
-			errMsg << "The source value of cast operation exceeds the limit of " <<
-				typeid(dst).name() << " data type.";
+			errMsg << "The source value exceeds the limit of " << typeid(dst).name();
 			throw std::overflow_error(errMsg.str());
 		}
 	}

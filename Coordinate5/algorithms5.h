@@ -14,6 +14,12 @@ namespace Imaging
 	shared by multiple container classes.
 	*/
 
+	/* C = A + B vs. A += B
+
+	The operation & assignment {+=, -=, *=} should not use following implementation
+	because the iterators of lhs will be increased twice per loop.
+	Instead, use the separate implementatino for such scenario. */
+
 	// C = A + B
 	template <typename InputIteratorA, typename InputIteratorB, typename OutputIterator>
 	void AddRange(InputIteratorA itA, InputIteratorA itA_last, InputIteratorB itB,

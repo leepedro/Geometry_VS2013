@@ -78,6 +78,8 @@
   <ItemGroup>
     <ClInclude Include="algorithms5.h" />
     <ClInclude Include="array_utilities5.h" />
+    <ClInclude Include="coordinate5.h" />
+    <ClInclude Include="coordinate5_inl.h" />
     <ClInclude Include="safe_operations5.h" />
   </ItemGroup>
   <ItemGroup>
